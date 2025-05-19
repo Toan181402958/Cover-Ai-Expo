@@ -1,0 +1,48 @@
+# image: node:20
+
+# stages:
+#   - install
+#   - build
+#   - update
+
+# cache:
+#   key: ${CI_COMMIT_REF_SLUG}
+#   paths:
+#     - node_modules/
+
+# before_script:
+#   - yarn global add eas-cli
+#   - eas whoami || eas login --token $EXPO_TOKEN
+#   - yarn install --frozen-lockfile
+
+# install_dependencies:
+#   stage: install
+#   script:
+#     - echo "Dependencies installed"
+# build_android:
+#   stage: build
+#   script:
+#     - esa build --platform android --non-interactive --profile production
+#   only:
+#     - build
+
+# build_ios:
+#   stage: build
+#   script:
+#     - eas build --platform ios --non-interactive --profile production --no-wait
+#   only:
+#     - build
+#   variables:
+#     EXPO_TOKEN: $EXPO_TOKEN
+#     APPLE_ID: $APPLE_ID
+#     APPLE_PASSWORD: $APPLE_APP_SPECIFIC_PASSWORD
+#   artifacts:
+#     paths:
+#       - dist/
+#     expire_in: 1 week
+# eas_update:
+#   stage: update
+#   script:
+#     - eas update --branch develop --message "CI: update from Gitlab"
+#   only:
+#     - develop
