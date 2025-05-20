@@ -103,6 +103,11 @@ const AudioDetailScreen = (props: any) => {
   const handleBack = () => {
     if (!!fromDetail) {
       navigationHelper.goBack();
+    } else {
+      playerAudio.remove();
+      navigationHelper.reset(ROUTER_APP.MAIN_TAB, {
+        routes: [{ name: ROUTER_APP.HOME }],
+      });
     }
   };
 
@@ -136,7 +141,7 @@ const AudioDetailScreen = (props: any) => {
         videoUri,
         fileUri
       );
-      const { uri } = await downloadResumable.downloadAsync();
+      const { uri }: any = await downloadResumable.downloadAsync();
 
       // save to library
       const asset = await MediaLibrary.createAssetAsync(uri);

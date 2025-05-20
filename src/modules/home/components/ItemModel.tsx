@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { TypeTheme } from "../model/index.props";
-import R from "src/assets/R";
-import CusText from "components/text/CusText";
-import { Image as ImageFast } from "expo-image";
 import SkeletonBox from "components/skeleton";
+import CusText from "components/text/CusText";
+import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
+import { Image as ImageFast } from "expo-image";
+import LottieView from "lottie-react-native";
+import React, { useEffect } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import lottieWaveWhite from "src/assets/jsons/wave_white.json";
+import R from "src/assets/R";
 import { colors, dimensions } from "src/theme";
-import { useAudioPlayer } from "expo-audio";
+import { TypeTheme } from "../model/index.props";
 
 type Props = {
   item: TypeTheme;
@@ -15,18 +17,24 @@ type Props = {
 };
 const ItemModel = (props: Props) => {
   const { item, itemModel, onPressItem } = props;
-  const [isPlay, setIsPlay] = useState(false);
 
   const uri = (item.thumbnail ?? "").replace(/ /g, "%20");
   const isSelected = itemModel?.id === item.id;
   const border = isSelected ? colors.primary : "#979797";
-  const imageWidth = isSelected
-    ? (dimensions.width - 40 - 16) / 3 - 10
-    : (dimensions.width - 40 - 16) / 3;
-  const player = useAudioPlayer(item.demoUrl);
+  const player = useAudioPlayer({ uri: item.demoUrl });
+  const statusPlayer = useAudioPlayerStatus(player);
+  useEffect(() => {
+    if (!isSelected) {
+      player.pause();
+    }
+  }, [isSelected]);
   const onPlay = () => {
-    player.play();
-    setIsPlay(true);
+    if (player.playing) {
+      player.pause();
+    } else {
+      player.seekTo(0);
+      player.play();
+    }
   };
   if (typeof item === "number") {
     return (
@@ -39,7 +47,6 @@ const ItemModel = (props: Props) => {
   }
   return (
     <TouchableOpacity
-      // disabled={isSelected}
       onPress={() => {
         onPressItem(item);
       }}
@@ -70,7 +77,7 @@ const ItemModel = (props: Props) => {
             onPress={() => itemModel && onPlay()}
             style={styles.boxPlay}
           >
-            {isPlay ? (
+            {player.playing ? (
               <Image
                 source={R.images.ic_pause}
                 style={{ width: 12, height: 12, tintColor: "white" }}
@@ -85,39 +92,18 @@ const ItemModel = (props: Props) => {
         ) : (
           <></>
         )}
-        {/* {isSelected ? (
-          <>
-            {isLoading ? (
-              <View style={styles.wrapperProgress}>
-                <View style={styles.boxProgress} />
-                <Progress.Circle
-                  endAngle={0.8}
-                  indeterminate={true}
-                  color={"#FFF"}
-                  size={21}
-                  borderWidth={3}
-                />
-              </View>
-            ) : (
-              <>
-                {isPlay ? (
-                  <View style={styles.boxLottie}>
-                    <LottieView
-                      source={require("../../../assets/json/wave_white.json")}
-                      autoPlay={true}
-                      loop={true}
-                      style={{ width: 80, height: 50 }}
-                    />
-                  </View>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-          </>
+        {player.playing && isSelected ? (
+          <View style={styles.boxLottie}>
+            <LottieView
+              source={lottieWaveWhite}
+              autoPlay={true}
+              loop={true}
+              style={{ width: 80, height: 50 }}
+            />
+          </View>
         ) : (
           <></>
-        )} */}
+        )}
       </View>
       <CusText
         fontSize={12}
@@ -146,6 +132,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
     top: 10,
+  },
+  boxLottie: {
+    position: "absolute",
+    bottom: 8,
+    width: "100%",
+    alignItems: "center",
   },
 });
 

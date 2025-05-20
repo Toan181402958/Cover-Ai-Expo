@@ -2,7 +2,10 @@ import React from "react";
 import {
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,6 +23,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = (props) => {
     showHeader = true,
     loading = false,
     children,
+    isScroll,
     containerStyle,
     headerStyle,
     titleStyle,
@@ -34,6 +38,35 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = (props) => {
     if (navigationHelper.canGoBack()) {
       navigationHelper.goBack();
     }
+  };
+  const renderBody = () => {
+    if (!!isScroll) {
+      return (
+        <KeyboardAvoidingView
+          style={[styles.root]}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={0}
+        >
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            // style={[styles.outer, backgroundStyle]}
+            // contentContainerStyle={actualStyle}
+          >
+            {children}
+          </ScrollView>
+        </KeyboardAvoidingView>
+      );
+    }
+    return (
+      <KeyboardAvoidingView
+        style={[styles.root]}
+        // behavior={Platform.OS === "ios" ? "padding" : undefined}
+        // keyboardVerticalOffset={0}
+      >
+        {children}
+      </KeyboardAvoidingView>
+    );
   };
   return (
     <View style={[styles.container, containerStyle]}>
@@ -62,7 +95,7 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = (props) => {
             <View style={styles.backButtonPlaceholder} />
           </View>
         ))}
-      <View style={[styles.body, contentStyle]}>{children}</View>
+      {renderBody()}
       <Modal transparent visible={loading} animationType="fade">
         <View style={styles.modalBackground}>
           <View style={styles.loadingContainer}>
@@ -76,6 +109,10 @@ const ScreenWrapper: React.FC<ScreenWrapperProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
   container: {
     flex: 1,
     backgroundColor: colors.backgroundColor,

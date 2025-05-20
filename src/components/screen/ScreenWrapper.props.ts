@@ -6,6 +6,8 @@ export type ScreenWrapperProps = {
     showHeader?: boolean;
     loading?: boolean;
     children: React.ReactNode;
+
+    isScroll?: boolean;
   
     // Style overrides
     containerStyle?: StyleProp<ViewStyle>;

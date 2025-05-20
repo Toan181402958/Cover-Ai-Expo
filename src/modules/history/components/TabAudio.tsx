@@ -15,6 +15,7 @@ import CusText from "components/text/CusText";
 import * as Progress from "react-native-progress";
 import { Image as ImageFast } from "expo-image";
 import { ROUTER_APP } from "constants/constants";
+import { colorBlur } from "utils/funcHelper";
 
 type Props = {
   dataMain: Array<any>;
@@ -160,7 +161,7 @@ const BodyItem = ({ item }: { item: any }) => {
               height={4}
               color={colors.primary}
               borderWidth={0}
-              unfilledColor={"#FFF0E0"}
+              unfilledColor={colorBlur(colors.primary, 0.2)}
               animationType="timing"
               indeterminate={true}
             />
@@ -240,16 +241,16 @@ const styles = StyleSheet.create({
     height: itemSize - 19,
     borderRadius: 16,
     marginBottom: 4,
+    borderWidth: 1,
+    borderColor: "#979797",
   },
   img_pending: {
     ...styleView.centerItem,
-    borderWidth: 1,
     borderColor: colors.primary,
     paddingTop: 16,
   },
   img_failed: {
     ...styleView.centerItem,
-    borderWidth: 1,
     borderColor: "#7D7D7D",
     paddingTop: 12,
     paddingHorizontal: 4,
