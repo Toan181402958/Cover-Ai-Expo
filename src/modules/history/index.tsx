@@ -13,6 +13,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import BaseButton from "components/button";
 import ModalConfirmDelete from "./components/ModalConfirmDelete";
 import Toast from "react-native-toast-message";
+import { colorBlur } from "utils/funcHelper";
 
 type Props = {};
 const HistoryScreen = (props: Props) => {
@@ -130,7 +131,11 @@ const HistoryScreen = (props: Props) => {
         <TouchableOpacity
           style={[
             styles.btn_select,
-            { backgroundColor: isSelect ? "#FFF0E0" : "#F4F4F6" },
+            {
+              backgroundColor: isSelect
+                ? colorBlur(colors.primary, 0.2)
+                : "#F4F4F6",
+            },
           ]}
           onPress={() => {
             if (index == 0 && !listAudio?.length) return;

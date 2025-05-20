@@ -9,12 +9,29 @@ import loadingDot from "src/assets/jsons/loading_dot.json";
 import { LinearGradient } from "expo-linear-gradient";
 import { useHistoryStore } from "modules/history/store/historyStore";
 import { colorBlur } from "utils/funcHelper";
+import { useCreateVoiceStore } from "./store/createVoiceStore";
+import { useIsFocused } from "@react-navigation/native";
+import { ROUTER_APP, TYPE_STATUS_ALL } from "constants/constants";
 
 type Props = {};
 const LoadingVoiceScreen = (props: Props) => {
   const {} = props;
   const arrHistory = useHistoryStore((state) => state.arrHistory);
-  useEffect(() => {}, []);
+  const dataCreating = useCreateVoiceStore((state) => state.dataCreating);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (
+      !!isFocused &&
+      dataCreating?.id &&
+      dataCreating?.status === TYPE_STATUS_ALL.COMPLETED
+    ) {
+      const itemFind = arrHistory.find((val) => val.id == dataCreating.id);
+      navigationHelper.navigate(ROUTER_APP.AUDIO_DETAIL, {
+        data: itemFind,
+      });
+    }
+  }, [arrHistory, dataCreating]);
   return (
     <View style={styles.container}>
       <TouchableOpacity
