@@ -25,6 +25,9 @@ const ROUTER_APP = {
   AUDIO_DETAIL: "AudioDetail",
   WEB_VIEW: "Webview",
   ABOUT_US: "AboutUs",
+  CHOOSE_SOURCE: "ChooseSource",
+  RECORD_VOICE: "RecordVoice",
+  CUSTOMIZE_VOICE: "CustomizeVoice",
 };
 const TYPE_LANGUAGE = {
   EN: "en",

@@ -168,6 +168,9 @@ function strings() {
     record_voice: i18n.t("record_voice", { defaultValue: "" }),
     upload_audio_file: i18n.t("upload_audio_file", { defaultValue: "" }),
     ytb_link: i18n.t("ytb_link", { defaultValue: "" }),
+    suggest_record_default: i18n.t("suggest_record_default", {
+      defaultValue: "",
+    }),
     step_2: i18n.t("step_2", { defaultValue: "" }),
     content_paste_ytb_link: i18n.t("content_paste_ytb_link", {
       defaultValue: "",

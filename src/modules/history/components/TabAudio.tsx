@@ -144,7 +144,7 @@ const BodyItem = ({ item }: { item: any }) => {
         <>
           <View style={[styles.img_thumb, styles.img_pending]}>
             <Image
-              style={globalStyle.icon_32}
+              style={{ ...globalStyle.icon_32 }}
               source={R.images.ic_music_circle}
             />
             <CusText

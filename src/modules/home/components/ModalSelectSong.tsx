@@ -5,6 +5,7 @@ import R from "src/assets/R";
 import { colors, dimensions, globalStyle, styleView } from "src/theme";
 import { Image as ImageFast } from "expo-image";
 import BaseButton from "components/button";
+import { colorBlur } from "utils/funcHelper";
 interface Props {
   visible: boolean;
   songSelect: any;
@@ -37,13 +38,6 @@ const ModalSelectSong = (props: Props) => {
               source={R.images.ic_x_close}
             />
           </TouchableOpacity>
-          {/* <FastImage
-            style={styles.img_song}
-            resizeMode="cover"
-            source={
-              songSelect?.thumbnails ? {uri: songSelect.thumbnails} : IC_APP
-            }
-          /> */}
           <ImageFast
             style={styles.img_song}
             source={
@@ -54,7 +48,6 @@ const ModalSelectSong = (props: Props) => {
           />
 
           <CusText
-            // style={{textAlign: 'center'}}
             numberOfLines={1}
             fontSize={16}
             fontWeight="500"
@@ -108,7 +101,7 @@ const styles = StyleSheet.create({
   },
   box_close: {
     ...styleView.centerItem,
-    backgroundColor: "#FFF0E0",
+    backgroundColor: colorBlur(colors.primary, 0.15),
     height: 36,
     width: 36,
     borderRadius: 18,

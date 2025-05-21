@@ -13,6 +13,9 @@ import LoadingVoiceScreen from "modules/home/LoadingVoiceScreen";
 import AudioDetailScreen from "modules/history/AudioDetailScreen";
 import WebviewScreen from "modules/setting/WebviewScreen";
 import AboutUsScreen from "modules/setting/AboutUsScreen";
+import ChooseSourceScreen from "modules/myVoice/ChooseSourceScreen";
+import RecordVoiceScreen from "modules/myVoice/RecordVoiceScreen";
+import CustomizeVoiceScreen from "modules/myVoice/CustomizeVoiceScreen";
 
 const APP_STACK = {
   [ROUTER_APP.SPLASH]: {
@@ -53,6 +56,18 @@ const APP_STACK = {
   },
   [ROUTER_APP.ABOUT_US]: {
     component: AboutUsScreen,
+    options: {},
+  },
+  [ROUTER_APP.CHOOSE_SOURCE]: {
+    component: ChooseSourceScreen,
+    options: { gestureDirection: "vertical" },
+  },
+  [ROUTER_APP.RECORD_VOICE]: {
+    component: RecordVoiceScreen,
+    options: {},
+  },
+  [ROUTER_APP.CUSTOMIZE_VOICE]: {
+    component: CustomizeVoiceScreen,
     options: {},
   },
 };

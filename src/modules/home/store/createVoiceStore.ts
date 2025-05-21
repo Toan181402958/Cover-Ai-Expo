@@ -11,9 +11,11 @@ import {
 } from "../HomeApi";
 import { useHistoryStore } from "modules/history/store/historyStore";
 import { TYPE_STATUS_ALL } from "constants/constants";
+import { useUserStore } from "src/store/userStore";
 
 type CreateVoiceStateProps = {
   dataCreating: any;
+  dataProcessingHome: any;
   createVoice: (payload: PayloadCreateVoiceProps) => void;
   createTextToVoice: (payload: PayloadCreateTextToVoiceProps) => void;
   getStatusVoice: (id: string, idCreate?: string) => void;
@@ -21,8 +23,10 @@ type CreateVoiceStateProps = {
 export const useCreateVoiceStore = create<CreateVoiceStateProps>(
   (set, get) => ({
     dataCreating: {},
+    dataProcessingHome: {},
     createVoice: async (payload: PayloadCreateVoiceProps) => {
       const { sourceUrl, dataSelect, titleVideo, userId, type } = payload;
+      console.log("🚀 ~ createVoice: ~ payload:", payload);
       const newData = {
         id: "",
         idCreate: generateId().toString(),
@@ -44,15 +48,15 @@ export const useCreateVoiceStore = create<CreateVoiceStateProps>(
           model_name: dataSelect.name,
         },
       };
-      set({ dataCreating: newData });
+      set({ dataCreating: newData, dataProcessingHome: newData });
       useHistoryStore.getState().addItemHistory(newData);
       try {
         const headers = {
           "Content-Type": "multipart/form-data",
         };
         const formData = new FormData();
-        formData.append("source_url", sourceUrl); // link youtube
-        formData.append("model_id", dataSelect.id); // id theme
+        formData.append("source_url", sourceUrl);
+        formData.append("model_id", dataSelect.id);
         formData.append("user_id", userId);
         formData.append("type", type);
 
@@ -72,7 +76,7 @@ export const useCreateVoiceStore = create<CreateVoiceStateProps>(
             intervalId: null as NodeJS.Timeout | null,
           };
 
-          set({ dataCreating: data });
+          set({ dataCreating: data, dataProcessingHome: data });
           data.intervalId = setInterval(() => {
             get().getStatusVoice(data.id, data.idCreate.toString());
           }, 5000);
@@ -158,8 +162,26 @@ export const useCreateVoiceStore = create<CreateVoiceStateProps>(
             model_url: findItem?.model_url,
             thumbnail: res?.result?.thumbnail || findItem?.thumbnail_voice,
           };
-          set({ dataCreating: data });
+          set({ dataCreating: data, dataProcessingHome: {} });
           useHistoryStore.getState().updateItemHistory(data);
+          useUserStore.getState().getUserInfo();
+        }
+        if (res?.result?.status == TYPE_STATUS_ALL.FAILED) {
+          useHistoryStore.getState().clearInterval(id);
+          const findItem = useHistoryStore
+            .getState()
+            .arrHistory.find((element) => element.id === id);
+          const data = {
+            ...res?.result,
+            idCreate: idCreate || "",
+            nameSong: findItem?.nameSong,
+            thumbnail_voice: findItem?.thumbnail_voice,
+            model_url: findItem?.model_url,
+            thumbnail: res?.result?.thumbnail || findItem?.thumbnail_voice,
+          };
+          set({ dataCreating: data, dataProcessingHome: {} });
+          useHistoryStore.getState().updateItemHistory(data);
+          useUserStore.getState().getUserInfo();
         }
       } catch {}
     },

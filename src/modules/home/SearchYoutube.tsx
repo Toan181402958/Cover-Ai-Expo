@@ -21,6 +21,7 @@ import { Image as ImageFast } from "expo-image";
 import CusText from "components/text/CusText";
 import ModalSelectSong from "./components/ModalSelectSong";
 import { getDataYoutube } from "./HomeApi";
+import { colorBlur } from "utils/funcHelper";
 
 const LIMIT = 10;
 const TYPE_BODY = {
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20,
-    backgroundColor: "#FFF0E0",
+    backgroundColor: colorBlur(colors.primary, 0.15),
   },
   ic_back: {
     height: 24,

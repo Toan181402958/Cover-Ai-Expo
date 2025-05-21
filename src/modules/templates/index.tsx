@@ -1,9 +1,13 @@
-import React from "react";
+import { useLanguageStore } from "modules/setting/store/languageStore";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 type Props = {};
 const TemplatesScreen = (props: Props) => {
   const {} = props;
+  const locale = useLanguageStore((state) => state.locale);
+
+  useEffect(() => {}, [locale]);
   return (
     <View style={styles.container}>
       <Text>Templates</Text>

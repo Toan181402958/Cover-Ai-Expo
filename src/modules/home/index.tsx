@@ -24,12 +24,20 @@ import { TypeCategory, TypeTheme } from "./model/index.props";
 import { useCreateVoiceStore } from "./store/createVoiceStore";
 import ScreenWrapper from "components/screen/ScreenWrapper";
 import NumberTurnTries from "./components/NumberTurnTries";
+import { useFocusEffect } from "@react-navigation/native";
+import ResultProcessing from "./components/ResultProcessing";
+import { useHistoryStore } from "modules/history/store/historyStore";
+import { useLanguageStore } from "modules/setting/store/languageStore";
 
 type Props = {};
 const HomeScreen = (props: Props) => {
   const {} = props;
   const { init, isShowSuggestYtb, changeShowSuggestYtb } = useHome();
+  const locale = useLanguageStore((state) => state.locale);
   const userInfo = useUserStore((state) => state.user);
+  const dataProcessingHome = useCreateVoiceStore(
+    (state) => state.dataProcessingHome
+  );
 
   const [linkYtb, setLinkYtb] = useState("");
   const [enterText, setEnterText] = useState<string>("");
@@ -59,6 +67,8 @@ const HomeScreen = (props: Props) => {
       Keyboard.dismiss();
     };
   }, []);
+
+  useEffect(() => {}, [locale]);
 
   const handlePaste = async () => {
     setLinkYtb("");
@@ -135,6 +145,13 @@ const HomeScreen = (props: Props) => {
           <HeaderHome userInfo={userInfo} />
           {!userInfo.isSubscribed && userInfo.useAppFree < USE_APP_MAX && (
             <NumberTurnTries numberTurn={USE_APP_MAX - userInfo.useAppFree} />
+          )}
+          {!!dataProcessingHome?.id && (
+            <ResultProcessing
+              result={useHistoryStore
+                .getState()
+                .arrHistory?.find((val) => val?.status == "PENDING")}
+            />
           )}
           <StepOne
             linkYtb={linkYtb}
